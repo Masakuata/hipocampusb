@@ -25,14 +25,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '.#/components/schemas/user'
+              $ref: '#/components/schemas/user'
       responses:
         201:
           description: The user was registered
           content:
             application/json:
               schema:
-                $ref: '.#/components/schemas/user'
+                $ref: '#/components/schemas/user'
         400:
           description: The request is wrong or malformed and cannot be performed
         406:
