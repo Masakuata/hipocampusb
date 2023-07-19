@@ -1,0 +1,10 @@
+name = "hipocampusb"
+version = "0.0.1"
+description = "A backend REST API service to manage hipocampus reservations"
+license = "MIT"
+authors = [
+    "Edson Manuel Carballo Vera <edsonmanuelcarballovera@gmail.com>",
+]
+maintainers = [
+    "Edson Manuel Carballo Vera <edsonmanuelcarballovera@gmail.com>"
+]
