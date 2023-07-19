@@ -42,12 +42,12 @@ jobs:
       - name: Validate spec
         uses: mpetrunic/swagger-cli-action@v1.0.0
         with:
-          command: "validate spec/xatal.yaml"
+          command: "validate spec/hipocampus.yaml"
 
       - name: Build spec
         uses: mpetrunic/swagger-cli-action@v1.0.0
         with:
-          command: "bundle -o spec.yaml -t yaml spec/xatal.yaml"
+          command: "bundle -o spec.yaml -t yaml spec/hipocampus.yaml"
 
       - name: Publish spec
         uses: Legion2/swagger-ui-action@v1
@@ -62,7 +62,7 @@ jobs:
           publish_dir: specs
 
   build_image:
-    needs: [test, spec_gen]
+    needs: [ test, spec_gen ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
