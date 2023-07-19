@@ -62,7 +62,7 @@ jobs:
           publish_dir: specs
 
   build_image:
-    needs: test
+    needs: [test, spec_gen]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
