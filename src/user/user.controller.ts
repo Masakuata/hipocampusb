@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { Response } from "express";
+import { Document } from "mongodb";
 
 @Controller("user")
 export class UserController {
@@ -13,6 +14,16 @@ export class UserController {
   async create(@Body() createUserDto: CreateUserDto, @Res() response: Response) {
     const [status, newUser] = await this.userService.create(createUserDto);
     response.status(status).send(newUser);
+  }
+
+  @Post("/login")
+  async login(@Body() credentials: Document, @Res() response: Response) {
+    if ("email" in credentials && "password" in credentials) {
+      const [status, user] = await this.userService.login(credentials.email, credentials.password);
+      response.status(status).send(user);
+    } else {
+      response.status(HttpStatus.NOT_ACCEPTABLE).send();
+    }
   }
 
   @Get(":id")

@@ -19,6 +19,14 @@ export class UserService {
     return [HttpStatus.CREATED, registeredUser];
   }
 
+  async login(email: string, password: string): Promise<[HttpStatus, Document | null]> {
+    const user = await UserService.mongo.findOne({ email: email, password: password });
+    if (user === null) {
+      return [HttpStatus.NOT_FOUND, null];
+    }
+    return [HttpStatus.OK, user];
+  }
+
   async findOne(_id: string): Promise<[HttpStatus, Document | null]> {
     const user = await UserService.mongo.findById(_id);
     if (user !== null) {
