@@ -21,6 +21,23 @@ components:
           type: string
         fullname:
           type: string
+    reservation:
+      type: object
+      required:
+        - date
+        - paid
+        - client
+        - reservedBy
+      properties:
+        date:
+          type: string
+          example: 20-07-2023
+        paid:
+          type: boolean
+        client:
+          type: string
+        reservedBy:
+          type: string
 paths:
   /user:
     post:
@@ -42,3 +59,19 @@ paths:
           description: The request is unacceptable due to missing or invalid values
         '409':
           description: This email is already registered on another user
+  /reservation:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reservation'
+      responses:
+        '201':
+          description: The reservation was created
+        '409':
+          description: The date is already reserved
+    get:
+      responses:
+        '200':
+          description: All the reservations were retrieved
