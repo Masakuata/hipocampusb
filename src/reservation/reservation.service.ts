@@ -21,7 +21,7 @@ export class ReservationService {
   }
 
   async isAvailable(date: string): Promise<HttpStatus.OK | HttpStatus.CONFLICT> {
-    if (await ReservationService.mongo.count({ date }) > 0) {
+    if (await ReservationService.mongo.count({ date }) === 0) {
       return HttpStatus.OK;
     }
     return HttpStatus.CONFLICT;
