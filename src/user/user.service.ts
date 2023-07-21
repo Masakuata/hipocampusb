@@ -5,7 +5,7 @@ import { Document } from "mongodb";
 
 @Injectable()
 export class UserService {
-  static readonly mongo = new MongoHandler("randomStorage", "hipocampus");
+  static readonly mongo = new MongoHandler("randomStorage", "hipocampusU");
 
   async create(createUserDto: CreateUserDto): Promise<[HttpStatus, Document | null]> {
     if (await this.isRegistered(createUserDto.email)) {
