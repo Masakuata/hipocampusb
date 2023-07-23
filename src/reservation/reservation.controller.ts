@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpStatus, Patch, Post, Res } from "@nestjs/common";
 import { ReservationService } from "./reservation.service";
 import { CreateReservationDto } from "./dto/create-reservation.dto";
-import { UpdateReservationDto } from "./dto/update-reservation.dto";
 import { Response } from "express";
+import { Document } from "mongodb";
 
 @Controller("reservation")
 export class ReservationController {
@@ -21,28 +21,40 @@ export class ReservationController {
     response.status(status).send(reservations);
   }
 
-  @Get(":date")
-  async findOne(@Param("date") date: string, @Res() response: Response) {
-    const [status, reservation] = await this.reservationService.findOne(date);
-    response.status(status).send(reservation);
+  @Get()
+  async findOne(@Body() payload: Document, @Res() response: Response) {
+    if ("date" in payload) {
+      const [status, reservation] = await this.reservationService.findOne(payload.date);
+      response.status(status).send(reservation);
+    }
+    response.status(HttpStatus.NOT_ACCEPTABLE).send();
   }
 
-  @Get(":date/available")
-  async isAvailable(@Param("date") date: string, @Res() response: Response) {
-    response.status(await this.reservationService.isAvailable(date)).send();
+  @Get("/available")
+  async isAvailable(@Body() payload: Document, @Res() response: Response) {
+    if ("date" in payload) {
+      response.status(await this.reservationService.isAvailable(payload.date)).send();
+    }
+    response.status(HttpStatus.NOT_ACCEPTABLE).send();
   }
 
-  @Patch(":date")
+  @Patch()
   async update(
-    @Param("date") date: string,
-    @Body() updateReservationDto: UpdateReservationDto,
-    @Res() response: Response) {
-    const [status, reservation] = await this.reservationService.update(date, updateReservationDto);
-    response.status(status).send(reservation);
+    @Body() newValues: Document, @Res() response: Response) {
+    if ("oldDate" in newValues && "date" in newValues) {
+      const oldId = newValues.oldDate;
+      delete newValues.oldDate;
+      const [status, reservation] = await this.reservationService.update(oldId, newValues);
+      response.status(status).send(reservation);
+    }
+    response.status(HttpStatus.NOT_ACCEPTABLE).send();
   }
 
-  @Delete(":date")
-  async remove(@Param("date") date: string, @Res() response: Response) {
-    response.status(await this.reservationService.remove(date)).send();
+  @Delete()
+  async remove(@Body() payload: Document, @Res() response: Response) {
+    if ("date" in payload) {
+      response.status(await this.reservationService.remove(payload.date)).send();
+    }
+    response.status(HttpStatus.NOT_ACCEPTABLE).send();
   }
 }
