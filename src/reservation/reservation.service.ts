@@ -21,7 +21,7 @@ export class ReservationService {
   }
 
   async isAvailable(date: string): Promise<HttpStatus.OK | HttpStatus.CONFLICT> {
-    if (await ReservationService.mongo.count({ date }) === 0) {
+    if (await ReservationService.mongo.count({ date: date }) === 0) {
       return HttpStatus.OK;
     }
     return HttpStatus.CONFLICT;
@@ -42,7 +42,7 @@ export class ReservationService {
   }
 
   async findOne(date: string): Promise<[HttpStatus, Document | null]> {
-    const reservation = await ReservationService.mongo.findOne({ date });
+    const reservation = await ReservationService.mongo.findOne({ date: date });
     if (reservation === null) {
       return [HttpStatus.NOT_FOUND, null];
     }
@@ -50,7 +50,7 @@ export class ReservationService {
   }
 
   async update(date: string, updateReservationDto: UpdateReservationDto): Promise<[HttpStatus, Document | null]> {
-    if (await ReservationService.mongo.updateOne({ date }, updateReservationDto)) {
+    if (await ReservationService.mongo.updateOne({ date: date }, updateReservationDto)) {
       return [HttpStatus.NOT_FOUND, await ReservationService.mongo.findOne({ date })];
     } else {
       return [HttpStatus.NOT_FOUND, null];
@@ -58,7 +58,7 @@ export class ReservationService {
   }
 
   async remove(date: string): Promise<HttpStatus.OK | HttpStatus.NOT_FOUND> {
-    if (await ReservationService.mongo.deleteOne({ date })) {
+    if (await ReservationService.mongo.deleteOne({ date: date })) {
       return HttpStatus.OK;
     } else {
       return HttpStatus.NOT_FOUND;
